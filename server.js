@@ -14,11 +14,24 @@ if (fs.existsSync("data.json")) {
 }
 
 app.post("/spin", (req, res) => {
-  const ip =
-    req.headers["x-forwarded-for"] ||
-    req.socket.remoteAddress;
+  const { userId } = req.body;
 
-  if (users[ip]) {
+  // 🧠 get IP (fixed)
+  const ip = (req.headers["x-forwarded-for"] || "")
+              .split(",")[0] || req.socket.remoteAddress;
+
+  // 🧠 get browser info
+  const userAgent = req.headers["user-agent"];
+
+  if (!userId) {
+    return res.json({ error: "Invalid user!" });
+  }
+
+  // 🔐 stronger unique key
+  const uniqueKey = userId + "_" + ip + "_" + userAgent;
+
+  // 🚫 block repeat
+  if (users[uniqueKey]) {
     return res.json({ error: "❌ You already spun!" });
   }
 
@@ -30,7 +43,8 @@ app.post("/spin", (req, res) => {
   const result =
     options[Math.floor(Math.random() * options.length)];
 
-  users[ip] = true;
+  // ✅ save user
+  users[uniqueKey] = true;
 
   fs.writeFileSync("data.json", JSON.stringify(users));
 

@@ -35,7 +35,7 @@ app.post("/spin", (req, res) => {
     return res.json({ error: "❌ You already spun!" });
   }
 
-  const options = [
+  const displayOptions = [
   "1","1.25","2","2.25","3","3.25","4","4.25","5"
 ];
 

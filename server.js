@@ -35,12 +35,12 @@ app.post("/spin", (req, res) => {
     return res.json({ error: "❌ You already spun!" });
   }
 
-  const displayOptions = [
+  const options = [
   "1","1.25","2","2.25","3","3.25","4","4.25","5"
 ];
 
   const result =
-    options[Math.floor(Math.random() * options.length)];
+    options[Math.floor(Math.random() *options.length)];
 
   // ✅ save user
   users[uniqueKey] = true;
